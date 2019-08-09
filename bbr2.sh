@@ -31,8 +31,7 @@ centos_install(){
 	sed -i '/net.ipv4.tcp_congestion_control/d' /etc/sysctl.conf
 	sed -i '/net.ipv4.tcp_ecn/d' /etc/sysctl.conf
 	echo "net.ipv4.tcp_congestion_control = bbr2" >> /etc/sysctl.conf
-	echo "net.ipv4.tcp_ecn=1" >> /etc/sysctl.conf
-	echo 1 > /sys/module/tcp_bbr2/parameters/ecn_enable
+	echo "net.ipv4.tcp_ecn = 1" >> /etc/sysctl.conf
 	sysctl -p
 	rm -rf ~/bbr2
 	read -p "内核安装完成，重启生效，是否现在重启？[Y/n] :" yn
@@ -55,8 +54,7 @@ debian_install(){
 	sed -i '/net.ipv4.tcp_congestion_control/d' /etc/sysctl.conf
 	sed -i '/net.ipv4.tcp_ecn/d' /etc/sysctl.conf
 	echo "net.ipv4.tcp_congestion_control = bbr2" >> /etc/sysctl.conf
-	echo "net.ipv4.tcp_ecn=1" >> /etc/sysctl.conf
-	echo 1 > /sys/module/tcp_bbr2/parameters/ecn_enable
+	echo "net.ipv4.tcp_ecn = 1" >> /etc/sysctl.conf
 	sysctl -p
 	rm -rf ~/bbr2
 	read -p "内核安装完成，重启生效，是否现在重启？[Y/n] :" yn
@@ -68,12 +66,15 @@ debian_install(){
 }
 
 start_menu(){
-	read -p "请输入数字(1或者2)  1：安装BBRv2  2：我是咸鱼我退出:" num
+	read -p "请输入数字(1/2/3)  1：安装BBRv2  2：开启ECN  3：我是咸鱼我退出:" num
 	case "$num" in
 		1)
 		system_check
 		;;
 		2)
+		echo 1 > /sys/module/tcp_bbr2/parameters/ecn_enable
+		;;
+		3)
 		exit 1
 		;;
 	esac
